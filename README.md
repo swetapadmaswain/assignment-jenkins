@@ -2,6 +2,7 @@
 
 Plugins Required:
 •	Eclipse Temurin installer
+•	Git
 •	Sonarqube Scanner
 •	NodeJs
 •	OWASP Dependency-Check
