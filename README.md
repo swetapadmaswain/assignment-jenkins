@@ -3,6 +3,7 @@
 Plugins Required:
 •	Eclipse Temurin installer
 •	Git
+•	Git Server
 •	Sonarqube Scanner
 •	NodeJs
 •	OWASP Dependency-Check
@@ -13,5 +14,6 @@ Plugins Required:
 •	Docker-build-step
 •	Kubernetes All
 •	AWS
+
 
 
