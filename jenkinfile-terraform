@@ -4,17 +4,17 @@ pipeline {
     stages {
         stage('Git Clone') {
             steps {
-                git branch: 'main', url: 'https://github.com/akaspatranobis/hotstar-clone-app-ci-cd-k8.git'
+                git branch: 'main', url: 'https://github.com/swetapadmaswain/assignment-jenkins.git'
             }
         }
         
-        stage('Terraform Version Check') {
+        stage('Terraform Version Check') { // to check the terraform versions
             steps {
                 sh 'terraform --version'
             }
         }
         
-        stage('Terraform Initialize') {
+        stage('Terraform Initialize') { // to initialise the terraform
             steps {
                 dir('EKS_TERRAFORM') {
                     sh 'terraform init'
@@ -22,7 +22,7 @@ pipeline {
             }
         }
         
-        stage('Terraform Validate') {
+        stage('Terraform Validate') { // validate the code
             steps {
                 dir('EKS_TERRAFORM') {
                     sh 'terraform validate'
@@ -30,7 +30,7 @@ pipeline {
             }
         }
         
-        stage('Terraform Plan') {
+        stage('Terraform Plan') { // check the plan 
             steps {
                 dir('EKS_TERRAFORM') {
                     sh 'terraform plan'
@@ -38,10 +38,10 @@ pipeline {
             }
         }
         
-        stage('Terraform Apply/Destroy') {
+        stage('Terraform Apply/Destroy') { //then apply the code 
             steps {
-                dir('EKS_TERRAFORM') {
-                    sh 'terraform ${Action} --auto-approve'
+                dir('EKS_TERRAFORM') { //dir is used to do the cd operation acc to the git dir symmetry
+                    sh 'terraform ${Action} --auto-approve' // Action is the variable used here to auto approve or destroy
                 }
             }
         }
