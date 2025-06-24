@@ -4,24 +4,24 @@ pipeline{
         jdk 'jdk17'
         nodejs 'node16'
     }
-    environment {
-        SCANNER_HOME=tool 'sonar-scanner'
+    environment { 
+        SCANNER_HOME=tool 'sonar-scanner' // tool used to scan the code 
     }
     stages {
-        stage('clean workspace'){
+        stage('clean workspace'){ //clean the workspace on the jenkins server
             steps{
-                cleanWs()
+                cleanWs() //method
             }
         }
         stage('Checkout from Git'){
             steps{
-                git branch: 'main', url: 'https://github.com/akaspatranobis/hotstar-clone-app-ci-cd-k8.git'
+                git branch: 'main', url: 'https://github.com/swetapadmaswain/assignment-jenkins.git'
             }
         }
         stage("Sonarqube Analysis "){
             steps{
-                withSonarQubeEnv('sonar-server') {
-                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Hotstar \
+                withSonarQubeEnv('sonar-server') { //on this server do the below - create a project and a key - and use sonar scanner variable
+                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Hotstar \ 
                     -Dsonar.projectKey=Hotstar'''
                 }
             }
@@ -29,41 +29,41 @@ pipeline{
         stage("quality gate"){
            steps {
                 script {
-                    waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token'
+                    waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token' // give all the issues
                 }
             }
         }
         stage('Install Dependencies') {
             steps {
-                sh "npm install"
+                sh "npm install"  // install npm
             }
         }
         
-        stage('TRIVY FS SCAN') {
+        stage('TRIVY FS SCAN') {  //scan using trivy
             steps {
                 sh "trivy fs . > trivyfs.txt"
             }
         }
-        stage("Docker Build & Push"){
+        stage("Docker Build & Push"){ // build the docker image
             steps{
                 script{
                    withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){
                        sh "docker build -t hotstar ."
-                       sh "docker tag hotstar apatranobis59/hotstar:latest "
-                       sh "docker push apatranobis59/hotstar:latest"
+                       sh "docker tag hotstar swetaswain/hotstar:latest "
+                       sh "docker push swetaswain/hotstar:latest"
                     }
                 }
             }
         }
         stage("TRIVY"){
             steps{
-                sh "trivy image apatranobis59/hotstar:latest > trivyimage.txt" 
+                sh "trivy image swetaswain/hotstar:latest > trivyimage.txt" 
             }
         }
 		
 		stage("deploy_docker"){
 				steps{
-					sh "docker run -d --name hotstar -p 3001:3000 apatranobis59/hotstar:latest"
+					sh "docker run -d --name hotstar -p 3001:3000 swetaswain/hotstar:latest"
 				}
 		}
         
